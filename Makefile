@@ -1,11 +1,11 @@
 SRC = main.c shell.c tests.c #TODO alphabitized
 OBJ = ${SRC:.c=.o}
 
-shell_test: ${OBJ}
+test_shell: ${OBJ}
 	${CC} -o $@ ${OBJ}
 
 .o:
 	${CC} -c $<
 
 clean:
-	rm shell_test *.o
+	rm test_shell *.o

@@ -18,3 +18,11 @@ test_exit(struct arg *arg)
 
 	return OK; /* never reached TODO */
 }
+
+uint8_t
+test_init(struct arg *arg)
+{
+	printf("TODO N M X\n");
+
+	return OK;
+}

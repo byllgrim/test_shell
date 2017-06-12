@@ -22,7 +22,8 @@ test_exit(struct arg *arg)
 uint8_t
 test_init(struct arg *arg)
 {
-	printf("TODO N M X\n");
+	printf("init N=%d M=%d X=%d\n", arg->a1, arg->a2, arg->a3);
+	/* TODO implement */
 
 	return OK;
 }

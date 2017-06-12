@@ -1,4 +1,6 @@
+#include <errno.h>
 #include <stdio.h> /* TODO remove */
+#include <stdlib.h>
 #include <string.h> /* TODO remove */
 
 #include "shell.h"
@@ -22,11 +24,31 @@ shell_findcommand(char *str)
 }
 
 static void
-shell_populatearg(char *str)
+shell_populatearg(char *str, int argc, struct arg *arg)
 {
-	printf("populate from %s\n", str);
+	int i, tmp;
+	char *tok;
+
 	strtok(str, " "); /* TODO \n \t etc */
-	printf("first arg %s\n", strtok(NULL, " "));
+
+	for (i = 0; i < argc; i++) {
+		errno = 0; /* TODO errno ^= errno */
+		tok = strtok(NULL, " ");
+		if (!tok) {
+			fprintf(stderr, "too few arguments\n");
+			return; /* TODO return ERROR */
+			/* TODO remove duplication */
+		}
+
+		tmp = strtol(tok, NULL, 10); /* TODO other blanks */
+		if (errno) {
+			fprintf(stderr, "error argument\n");
+			return; /* TODO return ERROR */
+		}
+
+		*(int*)((char *)arg + i*sizeof(arg->a1)) = tmp;
+			/* TODO ^ proper structure */
+	}
 }
 
 int
@@ -36,14 +58,12 @@ shell_parse(char *str)
 	struct arg arg = {0};
 
 	str[strlen(str) - 1] = '\0'; /* TODO remove? */
-	printf("parse %s\n", str); /* TODO remove */
 	cmd = shell_findcommand(str);
-	printf("parse %s\n", str); /* TODO remove */
 	if (!cmd) {
 		fprintf(stderr, "no such command\n");
 		return ERROR;
 	}
 
-	shell_populatearg(str);
+	shell_populatearg(str, cmd->argc, &arg);
 	return cmd->func(&arg);
 }
